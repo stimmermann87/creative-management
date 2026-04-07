@@ -1,0 +1,8 @@
+INTERVIEW.md
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# IDE state
+.vs/

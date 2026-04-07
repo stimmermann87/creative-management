@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativesIntegration.Api", "CreativesIntegration.Api\CreativesIntegration.Api.csproj", "{8CF9F19D-FF2C-4697-9575-88C746BC7393}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeAPI.MicrosoftCurate", "FakeAPI.MicrosoftCurate\FakeAPI.MicrosoftCurate.csproj", "{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeAPI.IndexExchange", "FakeAPI.IndexExchange\FakeAPI.IndexExchange.csproj", "{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreativesIntegration.Frontend", "CreativesIntegration.Frontend", "{DB27B1D8-5543-43DF-93F8-8346A5453CA0}"
+	ProjectSection(SolutionItems) = preProject
+		creatives-integration-frontend\index.html = creatives-integration-frontend\index.html
+		creatives-integration-frontend\package.json = creatives-integration-frontend\package.json
+		creatives-integration-frontend\src\App.svelte = creatives-integration-frontend\src\App.svelte
+		creatives-integration-frontend\src\app.css = creatives-integration-frontend\src\app.css
+		creatives-integration-frontend\src\main.js = creatives-integration-frontend\src\main.js
+		creatives-integration-frontend\vite.config.js = creatives-integration-frontend\vite.config.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CreativesIntegration.Playwright", "CreativesIntegration.Playwright", "{4785B658-01C0-4317-B20F-B68CBD3061E3}"
+	ProjectSection(SolutionItems) = preProject
+		playwright-tests\.gitignore = playwright-tests\.gitignore
+		playwright-tests\package.json = playwright-tests\package.json
+		playwright-tests\playwright.config.js = playwright-tests\playwright.config.js
+		playwright-tests\tests\app.spec.js = playwright-tests\tests\app.spec.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3AB1596A-E420-4DA6-804A-0D30FB8D5AE5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|x64.Build.0 = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Debug|x86.Build.0 = Debug|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|x64.ActiveCfg = Release|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|x64.Build.0 = Release|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|x86.ActiveCfg = Release|Any CPU
+		{8CF9F19D-FF2C-4697-9575-88C746BC7393}.Release|x86.Build.0 = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|x64.Build.0 = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1EA4E93-8A16-4E6D-9D84-11E7EAA4D731}.Release|x86.Build.0 = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|x64.Build.0 = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Debug|x86.Build.0 = Debug|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|x64.ActiveCfg = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|x64.Build.0 = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{D56DE302-0C9B-4719-9E69-D6B5C2D0A7C9}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
