@@ -87,6 +87,8 @@ public class CreativeService(
             return null;
         }
 
+        _ = ResolvePlatformName(creative);
+
         var dealResponse = dealService.Create(new CreateDealRequest(
             creative.Name,
             creative.HtmlContent));
@@ -102,6 +104,8 @@ public class CreativeService(
             creative,
             $"Submitted to fake Microsoft Curate. Deal {dealResponse.DealId}, insertion order {insertionOrderResponse.InsertionOrderId}.");
     }
+
+    private static PlatformName ResolvePlatformName(Creative creative) => PlatformName.MicrosoftCurate;
 
     private static Dictionary<string, string[]> Validate(string name, string htmlContent, string status)
     {

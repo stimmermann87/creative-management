@@ -1,5 +1,10 @@
 namespace CreativesIntegration.Api.Models;
 
+public enum PlatformName
+{
+    MicrosoftCurate
+}
+
 public class Creative
 {
     public Guid Id { get; set; }
