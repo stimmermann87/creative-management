@@ -34,4 +34,12 @@ public record UpdateCreativeRequest(string Name, string HtmlContent, string Stat
 
 public record LaunchCreativeResponse(Creative Creative, string Message);
 
+public record CreativeAnalyticsPoint(DateOnly Date, int Impressions, decimal Price);
+
+public record CreativeAnalyticsResponse(
+    Guid CreativeId,
+    DateOnly FromDate,
+    DateOnly ToDate,
+    IReadOnlyList<CreativeAnalyticsPoint> DailyPoints);
+
 public record CreativeCommandResult(Creative? Creative, Dictionary<string, string[]>? Errors = null, bool NotFound = false);

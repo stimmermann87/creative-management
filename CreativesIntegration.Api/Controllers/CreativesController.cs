@@ -37,6 +37,21 @@ public class CreativesController(ICreativeService creativeService, IUserService 
             : Ok(creative);
     }
 
+    [HttpGet("{id:guid}/analytics")]
+    public async Task<IActionResult> GetAnalytics(Guid id, [FromQuery] int days = 30)
+    {
+        var authorizationResult = await AuthorizeRequestAsync();
+        if (authorizationResult is not null)
+        {
+            return authorizationResult;
+        }
+
+        var analytics = await creativeService.GetAnalyticsAsync(id, days);
+        return analytics is null
+            ? NotFound(new { message = "Creative not found." })
+            : Ok(analytics);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateCreativeRequest request)
     {

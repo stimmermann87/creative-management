@@ -13,6 +13,8 @@ public interface ICreativeService
 
     Task<Creative?> GetByIdAsync(Guid id);
 
+    Task<CreativeAnalyticsResponse?> GetAnalyticsAsync(Guid id, int days);
+
     Task<CreativeCommandResult> CreateAsync(CreateCreativeRequest request);
 
     Task<CreativeCommandResult> UpdateAsync(Guid id, UpdateCreativeRequest request);
@@ -32,6 +34,17 @@ public class CreativeService(
 
     public async Task<Creative?> GetByIdAsync(Guid id) =>
         await dbContext.Creatives.FirstOrDefaultAsync(creative => creative.Id == id);
+
+    public async Task<CreativeAnalyticsResponse?> GetAnalyticsAsync(Guid id, int days)
+    {
+        var creativeExists = await dbContext.Creatives.AnyAsync(creative => creative.Id == id);
+        if (!creativeExists)
+        {
+            return null;
+        }
+
+        return BuildAnalyticsResponse(id, days);
+    }
 
     public async Task<CreativeCommandResult> CreateAsync(CreateCreativeRequest request)
     {
@@ -101,6 +114,65 @@ public class CreativeService(
         return new LaunchCreativeResponse(
             creative,
             $"Submitted to fake Microsoft Curate. Deal {dealResponse.DealId}, insertion order {insertionOrderResponse.InsertionOrderId}.");
+    }
+
+    // The API returns the raw seeded points as canonical data so chart-specific handling stays in the UI.
+    private static CreativeAnalyticsResponse BuildAnalyticsResponse(Guid creativeId, int days)
+    {
+        const int availableDays = 30;
+
+        var normalizedDays = days <= 0
+            ? availableDays
+            : Math.Min(days, availableDays);
+
+        var allPoints = BuildThirtyDayAnalytics(DateOnly.FromDateTime(DateTime.UtcNow));
+        var selectedPoints = allPoints
+            .Skip(allPoints.Count - normalizedDays)
+            .ToList();
+
+        return new CreativeAnalyticsResponse(
+            creativeId,
+            selectedPoints[0].Date,
+            selectedPoints[^1].Date,
+            selectedPoints);
+    }
+
+    private static List<CreativeAnalyticsPoint> BuildThirtyDayAnalytics(DateOnly toDate)
+    {
+        var points = new List<CreativeAnalyticsPoint>(capacity: 30);
+        var fromDate = toDate.AddDays(-29);
+
+        for (var index = 0; index < 30; index++)
+        {
+            var dayNumber = index + 1;
+            var date = fromDate.AddDays(index);
+
+            if (dayNumber == 1)
+            {
+                points.Add(new CreativeAnalyticsPoint(date, 184, 26.45m));
+                continue;
+            }
+
+            if (dayNumber == 2)
+            {
+                points.Add(new CreativeAnalyticsPoint(date, 4, 1280.00m));
+                continue;
+            }
+
+            if (dayNumber <= 9)
+            {
+                points.Add(new CreativeAnalyticsPoint(date, 0, 0m));
+                continue;
+            }
+
+            var balancedDay = dayNumber - 9;
+            var impressions = 175 + ((balancedDay * 37) % 120) + ((balancedDay % 3) * 18);
+            var price = decimal.Round((impressions * 0.12m) + ((balancedDay % 4) * 1.65m), 2);
+
+            points.Add(new CreativeAnalyticsPoint(date, impressions, price));
+        }
+
+        return points;
     }
 
     private static Dictionary<string, string[]> Validate(string name, string htmlContent, string status)
