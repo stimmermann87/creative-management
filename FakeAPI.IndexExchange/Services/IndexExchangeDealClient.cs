@@ -3,14 +3,14 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface IIndexExchangeDealService
+public interface IIndexExchangeDealClient
 {
     IndexExchangeCreateDealResponse Create(IndexExchangeCreateDealRequest request);
 
     IndexExchangeDeal? GetById(string dealId);
 }
 
-public sealed class IndexExchangeDealService(IIndexExchangeCountryService countryService) : IIndexExchangeDealService
+public sealed class IndexExchangeDealClient(IIndexExchangeCountryClient countryClient) : IIndexExchangeDealClient
 {
     private static int _nextDealNumber;
 
@@ -19,7 +19,7 @@ public sealed class IndexExchangeDealService(IIndexExchangeCountryService countr
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Name);
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Html);
 
-        if (countryService.GetById(request.CountryId) is null)
+        if (countryClient.GetById(request.CountryId) is null)
         {
             throw new InvalidOperationException($"Country '{request.CountryId}' does not exist.");
         }

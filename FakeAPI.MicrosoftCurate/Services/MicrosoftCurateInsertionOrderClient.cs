@@ -4,14 +4,14 @@ using FakeAPI.MicrosoftCurate.Models;
 
 namespace FakeAPI.MicrosoftCurate.Services;
 
-public interface IMicrosoftCurateInsertionOrderService
+public interface IMicrosoftCurateInsertionOrderClient
 {
     MicrosoftCurateCreateInsertionOrderResponse Create(MicrosoftCurateCreateInsertionOrderRequest request);
 
     MicrosoftCurateInsertionOrder? GetById(string insertionOrderId);
 }
 
-public sealed class MicrosoftCurateInsertionOrderService(IMicrosoftCurateDealService dealService) : IMicrosoftCurateInsertionOrderService
+public sealed class MicrosoftCurateInsertionOrderClient(IMicrosoftCurateDealClient dealClient) : IMicrosoftCurateInsertionOrderClient
 {
     private static readonly ConcurrentDictionary<string, MicrosoftCurateInsertionOrder> InsertionOrders = new();
     private static int _nextInsertionOrderNumber;
@@ -21,7 +21,7 @@ public sealed class MicrosoftCurateInsertionOrderService(IMicrosoftCurateDealSer
         ArgumentException.ThrowIfNullOrWhiteSpace(request.DealId);
 
         var normalizedDealId = request.DealId.Trim();
-        if (!dealService.Exists(normalizedDealId))
+        if (!dealClient.Exists(normalizedDealId))
         {
             throw new InvalidOperationException($"Deal '{normalizedDealId}' does not exist.");
         }

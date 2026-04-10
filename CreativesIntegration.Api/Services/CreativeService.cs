@@ -22,8 +22,8 @@ public interface ICreativeService
 
 public class CreativeService(
     AppDbContext dbContext,
-    IMicrosoftCurateDealService dealService,
-    IMicrosoftCurateInsertionOrderService insertionOrderService) : ICreativeService
+    IMicrosoftCurateDealClient dealClient,
+    IMicrosoftCurateInsertionOrderClient insertionOrderClient) : ICreativeService
 {
     public async Task<IReadOnlyList<Creative>> GetAllAsync() =>
         await dbContext.Creatives
@@ -87,11 +87,11 @@ public class CreativeService(
             return null;
         }
 
-        var dealResponse = dealService.Create(new MicrosoftCurateCreateDealRequest(
+        var dealResponse = dealClient.Create(new MicrosoftCurateCreateDealRequest(
             creative.Name,
             creative.HtmlContent));
 
-        var insertionOrderResponse = insertionOrderService.Create(new MicrosoftCurateCreateInsertionOrderRequest(
+        var insertionOrderResponse = insertionOrderClient.Create(new MicrosoftCurateCreateInsertionOrderRequest(
             dealResponse.DealId,
             DateTime.UtcNow));
 

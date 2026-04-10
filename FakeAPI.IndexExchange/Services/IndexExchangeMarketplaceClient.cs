@@ -2,19 +2,19 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface IIndexExchangeMarketplaceService
+public interface IIndexExchangeMarketplaceClient
 {
     IndexExchangePublishMarketplaceResponse Publish(IndexExchangePublishMarketplaceRequest request);
 }
 
-public sealed class IndexExchangeMarketplaceService(IIndexExchangeDealService dealService) : IIndexExchangeMarketplaceService
+public sealed class IndexExchangeMarketplaceClient(IIndexExchangeDealClient dealClient) : IIndexExchangeMarketplaceClient
 {
     public IndexExchangePublishMarketplaceResponse Publish(IndexExchangePublishMarketplaceRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.DealId);
 
         var normalizedDealId = request.DealId.Trim();
-        var deal = dealService.GetById(normalizedDealId);
+        var deal = dealClient.GetById(normalizedDealId);
         if (deal is null)
         {
             return new IndexExchangePublishMarketplaceResponse(

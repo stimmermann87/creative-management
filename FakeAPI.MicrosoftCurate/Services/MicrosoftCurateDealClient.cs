@@ -4,7 +4,7 @@ using FakeAPI.MicrosoftCurate.Models;
 
 namespace FakeAPI.MicrosoftCurate.Services;
 
-public interface IMicrosoftCurateDealService
+public interface IMicrosoftCurateDealClient
 {
     MicrosoftCurateCreateDealResponse Create(MicrosoftCurateCreateDealRequest request);
 
@@ -13,7 +13,7 @@ public interface IMicrosoftCurateDealService
     MicrosoftCurateDeal? GetById(string dealId);
 }
 
-public sealed class MicrosoftCurateDealService : IMicrosoftCurateDealService
+public sealed class MicrosoftCurateDealClient : IMicrosoftCurateDealClient
 {
     private static readonly ConcurrentDictionary<string, MicrosoftCurateDeal> Deals = new();
     private static int _nextDealNumber;

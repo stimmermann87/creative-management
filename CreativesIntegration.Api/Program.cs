@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("CreativesIntegration"));
 builder.Services.AddScoped<ICreativeService, CreativeService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddSingleton<IMicrosoftCurateDealService, MicrosoftCurateDealService>();
-builder.Services.AddSingleton<IMicrosoftCurateInsertionOrderService, MicrosoftCurateInsertionOrderService>();
+builder.Services.AddSingleton<IMicrosoftCurateDealClient, MicrosoftCurateDealClient>();
+builder.Services.AddSingleton<IMicrosoftCurateInsertionOrderClient, MicrosoftCurateInsertionOrderClient>();
 
 var app = builder.Build();
 

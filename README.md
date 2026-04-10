@@ -56,6 +56,10 @@ npm test
 
 The Playwright project can also start the backend and frontend automatically through its config.
 
+Provider brief for candidates:
+
+- See [docs/provider-brief.md](./docs/provider-brief.md) for the fake external platform flows used in the launch exercise.
+
 Demo credentials:
 
 - Username: `demo`

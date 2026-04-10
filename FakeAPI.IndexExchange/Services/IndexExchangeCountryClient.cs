@@ -3,14 +3,14 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface IIndexExchangeCountryService
+public interface IIndexExchangeCountryClient
 {
     IndexExchangeCountry GetOrCreate(IndexExchangeGetOrCreateCountryRequest request);
 
     IndexExchangeCountry? GetById(int countryId);
 }
 
-public sealed class IndexExchangeCountryService : IIndexExchangeCountryService
+public sealed class IndexExchangeCountryClient : IIndexExchangeCountryClient
 {
     private static int _nextCountryId;
 
