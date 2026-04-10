@@ -1,12 +1,12 @@
 namespace FakeAPI.MicrosoftCurate.Models;
 
-public sealed record CreateDealRequest(string Name, string Html);
+public sealed record MicrosoftCurateCreateDealRequest(string Name, string Html);
 
-public sealed record CreateDealResponse(string DealId);
+public sealed record MicrosoftCurateCreateDealResponse(string DealId);
 
-public sealed record CreateInsertionOrderRequest(string DealId, DateTime StartDate);
+public sealed record MicrosoftCurateCreateInsertionOrderRequest(string DealId, DateTime StartDate);
 
-public sealed record CreateInsertionOrderResponse(string InsertionOrderId);
+public sealed record MicrosoftCurateCreateInsertionOrderResponse(string InsertionOrderId);
 
 public sealed record MicrosoftCurateDeal(
     string DealId,

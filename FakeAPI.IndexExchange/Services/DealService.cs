@@ -3,18 +3,18 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface IDealService
+public interface IIndexExchangeDealService
 {
-    CreateDealResponse Create(CreateDealRequest request);
+    IndexExchangeCreateDealResponse Create(IndexExchangeCreateDealRequest request);
 
     IndexExchangeDeal? GetById(string dealId);
 }
 
-public sealed class DealService(ICountryService countryService) : IDealService
+public sealed class IndexExchangeDealService(IIndexExchangeCountryService countryService) : IIndexExchangeDealService
 {
     private static int _nextDealNumber;
 
-    public CreateDealResponse Create(CreateDealRequest request)
+    public IndexExchangeCreateDealResponse Create(IndexExchangeCreateDealRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Name);
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Html);
@@ -35,7 +35,7 @@ public sealed class DealService(ICountryService countryService) : IDealService
 
         IndexExchangeStore.Deals[dealId] = deal;
 
-        return new CreateDealResponse(dealId, deal.Status);
+        return new IndexExchangeCreateDealResponse(dealId, deal.Status);
     }
 
     public IndexExchangeDeal? GetById(string dealId)

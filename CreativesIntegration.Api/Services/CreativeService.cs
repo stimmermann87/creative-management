@@ -22,8 +22,8 @@ public interface ICreativeService
 
 public class CreativeService(
     AppDbContext dbContext,
-    IDealService dealService,
-    IInsertionOrderService insertionOrderService) : ICreativeService
+    IMicrosoftCurateDealService dealService,
+    IMicrosoftCurateInsertionOrderService insertionOrderService) : ICreativeService
 {
     public async Task<IReadOnlyList<Creative>> GetAllAsync() =>
         await dbContext.Creatives
@@ -87,13 +87,11 @@ public class CreativeService(
             return null;
         }
 
-        _ = ResolvePlatformName(creative);
-
-        var dealResponse = dealService.Create(new CreateDealRequest(
+        var dealResponse = dealService.Create(new MicrosoftCurateCreateDealRequest(
             creative.Name,
             creative.HtmlContent));
 
-        var insertionOrderResponse = insertionOrderService.Create(new CreateInsertionOrderRequest(
+        var insertionOrderResponse = insertionOrderService.Create(new MicrosoftCurateCreateInsertionOrderRequest(
             dealResponse.DealId,
             DateTime.UtcNow));
 
@@ -104,8 +102,6 @@ public class CreativeService(
             creative,
             $"Submitted to fake Microsoft Curate. Deal {dealResponse.DealId}, insertion order {insertionOrderResponse.InsertionOrderId}.");
     }
-
-    private static PlatformName ResolvePlatformName(Creative creative) => PlatformName.MicrosoftCurate;
 
     private static Dictionary<string, string[]> Validate(string name, string htmlContent, string status)
     {

@@ -3,18 +3,18 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface ICountryService
+public interface IIndexExchangeCountryService
 {
-    IndexExchangeCountry GetOrCreate(GetOrCreateCountryRequest request);
+    IndexExchangeCountry GetOrCreate(IndexExchangeGetOrCreateCountryRequest request);
 
     IndexExchangeCountry? GetById(int countryId);
 }
 
-public sealed class CountryService : ICountryService
+public sealed class IndexExchangeCountryService : IIndexExchangeCountryService
 {
     private static int _nextCountryId;
 
-    public IndexExchangeCountry GetOrCreate(GetOrCreateCountryRequest request)
+    public IndexExchangeCountry GetOrCreate(IndexExchangeGetOrCreateCountryRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Iso3CountryCode);
 

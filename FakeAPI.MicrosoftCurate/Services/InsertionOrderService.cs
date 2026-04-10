@@ -4,19 +4,19 @@ using FakeAPI.MicrosoftCurate.Models;
 
 namespace FakeAPI.MicrosoftCurate.Services;
 
-public interface IInsertionOrderService
+public interface IMicrosoftCurateInsertionOrderService
 {
-    CreateInsertionOrderResponse Create(CreateInsertionOrderRequest request);
+    MicrosoftCurateCreateInsertionOrderResponse Create(MicrosoftCurateCreateInsertionOrderRequest request);
 
     MicrosoftCurateInsertionOrder? GetById(string insertionOrderId);
 }
 
-public sealed class InsertionOrderService(IDealService dealService) : IInsertionOrderService
+public sealed class MicrosoftCurateInsertionOrderService(IMicrosoftCurateDealService dealService) : IMicrosoftCurateInsertionOrderService
 {
     private static readonly ConcurrentDictionary<string, MicrosoftCurateInsertionOrder> InsertionOrders = new();
     private static int _nextInsertionOrderNumber;
 
-    public CreateInsertionOrderResponse Create(CreateInsertionOrderRequest request)
+    public MicrosoftCurateCreateInsertionOrderResponse Create(MicrosoftCurateCreateInsertionOrderRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.DealId);
 
@@ -35,7 +35,7 @@ public sealed class InsertionOrderService(IDealService dealService) : IInsertion
 
         InsertionOrders[insertionOrderId] = insertionOrder;
 
-        return new CreateInsertionOrderResponse(insertionOrderId);
+        return new MicrosoftCurateCreateInsertionOrderResponse(insertionOrderId);
     }
 
     public MicrosoftCurateInsertionOrder? GetById(string insertionOrderId)

@@ -13,11 +13,11 @@ public sealed record IndexExchangeCountry(
     string Iso3CountryCode,
     DateTime CreatedAtUtc);
 
-public sealed record GetOrCreateCountryRequest(string Iso3CountryCode);
+public sealed record IndexExchangeGetOrCreateCountryRequest(string Iso3CountryCode);
 
-public sealed record CreateDealRequest(string Name, string Html, int CountryId);
+public sealed record IndexExchangeCreateDealRequest(string Name, string Html, int CountryId);
 
-public sealed record CreateDealResponse(string DealId, IndexExchangeDealStatus Status);
+public sealed record IndexExchangeCreateDealResponse(string DealId, IndexExchangeDealStatus Status);
 
 public sealed record IndexExchangeDeal(
     string DealId,
@@ -27,9 +27,9 @@ public sealed record IndexExchangeDeal(
     DateTime CreatedAtUtc,
     IndexExchangeDealStatus Status);
 
-public sealed record PublishMarketplaceRequest(string DealId, DateTime StartDate);
+public sealed record IndexExchangePublishMarketplaceRequest(string DealId, DateTime StartDate);
 
-public sealed record PublishMarketplaceResponse(
+public sealed record IndexExchangePublishMarketplaceResponse(
     string DealId,
     DateTime StartDate,
     bool Success,

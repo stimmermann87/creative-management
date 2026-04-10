@@ -4,21 +4,21 @@ using FakeAPI.MicrosoftCurate.Models;
 
 namespace FakeAPI.MicrosoftCurate.Services;
 
-public interface IDealService
+public interface IMicrosoftCurateDealService
 {
-    CreateDealResponse Create(CreateDealRequest request);
+    MicrosoftCurateCreateDealResponse Create(MicrosoftCurateCreateDealRequest request);
 
     bool Exists(string dealId);
 
     MicrosoftCurateDeal? GetById(string dealId);
 }
 
-public sealed class DealService : IDealService
+public sealed class MicrosoftCurateDealService : IMicrosoftCurateDealService
 {
     private static readonly ConcurrentDictionary<string, MicrosoftCurateDeal> Deals = new();
     private static int _nextDealNumber;
 
-    public CreateDealResponse Create(CreateDealRequest request)
+    public MicrosoftCurateCreateDealResponse Create(MicrosoftCurateCreateDealRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Name);
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Html);
@@ -32,7 +32,7 @@ public sealed class DealService : IDealService
 
         Deals[dealId] = deal;
 
-        return new CreateDealResponse(dealId);
+        return new MicrosoftCurateCreateDealResponse(dealId);
     }
 
     public bool Exists(string dealId) =>

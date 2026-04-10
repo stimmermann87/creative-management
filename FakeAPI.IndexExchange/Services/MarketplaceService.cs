@@ -2,14 +2,14 @@ using FakeAPI.IndexExchange.Models;
 
 namespace FakeAPI.IndexExchange.Services;
 
-public interface IMarketplaceService
+public interface IIndexExchangeMarketplaceService
 {
-    PublishMarketplaceResponse Publish(PublishMarketplaceRequest request);
+    IndexExchangePublishMarketplaceResponse Publish(IndexExchangePublishMarketplaceRequest request);
 }
 
-public sealed class MarketplaceService(IDealService dealService) : IMarketplaceService
+public sealed class IndexExchangeMarketplaceService(IIndexExchangeDealService dealService) : IIndexExchangeMarketplaceService
 {
-    public PublishMarketplaceResponse Publish(PublishMarketplaceRequest request)
+    public IndexExchangePublishMarketplaceResponse Publish(IndexExchangePublishMarketplaceRequest request)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(request.DealId);
 
@@ -17,7 +17,7 @@ public sealed class MarketplaceService(IDealService dealService) : IMarketplaceS
         var deal = dealService.GetById(normalizedDealId);
         if (deal is null)
         {
-            return new PublishMarketplaceResponse(
+            return new IndexExchangePublishMarketplaceResponse(
                 normalizedDealId,
                 request.StartDate,
                 false,
@@ -26,14 +26,14 @@ public sealed class MarketplaceService(IDealService dealService) : IMarketplaceS
 
         if (deal.Status != IndexExchangeDealStatus.Completed)
         {
-            return new PublishMarketplaceResponse(
+            return new IndexExchangePublishMarketplaceResponse(
                 normalizedDealId,
                 request.StartDate,
                 false,
                 $"Deal '{normalizedDealId}' is {deal.Status} and cannot be published.");
         }
 
-        return new PublishMarketplaceResponse(
+        return new IndexExchangePublishMarketplaceResponse(
             normalizedDealId,
             request.StartDate,
             true,
