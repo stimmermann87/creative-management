@@ -1,6 +1,8 @@
 <script lang="ts">
+  import CreativeAnalyticsCard from './CreativeAnalyticsCard.svelte'
+
   type Creative = {
-    id: number
+    id: string
     name: string
     htmlContent: string
     status: string
@@ -13,10 +15,26 @@
     status: string
   }
 
+  type CreativeAnalyticsPoint = {
+    date: string
+    impressions: number
+    price: number
+  }
+
+  type CreativeAnalytics = {
+    creativeId: string
+    fromDate: string
+    toDate: string
+    dailyPoints: CreativeAnalyticsPoint[]
+  }
+
   export let showCreateForm = false
   export let selectedCreative: Creative | null = null
   export let createForm: CreativeForm
   export let editForm: CreativeForm
+  export let analytics: CreativeAnalytics | null = null
+  export let analyticsLoading = false
+  export let analyticsError = ''
   export let statusOptions: string[] = []
   export let saving = false
   export let onPreview: (title: string, htmlContent: string) => void = () => {}
@@ -61,13 +79,13 @@
     <div class="form-actions">
       <button
         class="ghost-button"
-        onclick={() => onPreview(createForm.name || 'New Creative', createForm.htmlContent)}
+        on:click={() => onPreview(createForm.name || 'New Creative', createForm.htmlContent)}
         disabled={saving}
       >
         Preview
       </button>
-      <button class="primary-button" onclick={onCreateCreative} disabled={saving}>Create</button>
-      <button class="ghost-button" onclick={onCancelCreate} disabled={saving}>Cancel</button>
+      <button class="primary-button" on:click={onCreateCreative} disabled={saving}>Create</button>
+      <button class="ghost-button" on:click={onCancelCreate} disabled={saving}>Cancel</button>
     </div>
   </section>
 {:else if selectedCreative !== null}
@@ -106,14 +124,20 @@
     <div class="form-actions">
       <button
         class="ghost-button"
-        onclick={() => onPreview(selectedCreative.name, selectedCreative.htmlContent)}
+        on:click={() => onPreview(selectedCreative.name, selectedCreative.htmlContent)}
         disabled={saving}
       >
         Preview
       </button>
-      <button class="primary-button" onclick={onSaveCreative} disabled={saving}>Save</button>
-      <button class="ghost-button" onclick={onLaunchCreative} disabled={saving}>Launch</button>
+      <button class="primary-button" on:click={onSaveCreative} disabled={saving}>Save</button>
+      <button class="ghost-button" on:click={onLaunchCreative} disabled={saving}>Launch</button>
     </div>
+
+    <CreativeAnalyticsCard
+      {analytics}
+      loading={analyticsLoading}
+      errorMessage={analyticsError}
+    />
   </section>
 {:else}
   <section class="editor-panel empty-state">

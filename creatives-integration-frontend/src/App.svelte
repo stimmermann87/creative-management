@@ -19,6 +19,10 @@
   let showPreview = false
   let previewTitle = 'Creative Preview'
   let previewDocument = buildPreviewDocument('')
+  let analytics = null
+  let analyticsLoading = false
+  let analyticsError = ''
+  let pendingAnalyticsId = null
   let errorMessage = ''
   let launchMessage = ''
   let searchTerm = ''
@@ -123,8 +127,13 @@
 
         if (selectedCreative) {
           fillEditForm(selectedCreative)
+
+          if (!analytics || analytics.creativeId !== selectedCreative.id) {
+            await loadAnalytics(selectedCreative.id)
+          }
         } else {
           selectedId = null
+          clearAnalytics()
         }
       }
 
@@ -143,6 +152,7 @@
     showCreateForm = false
     launchMessage = ''
     fillEditForm(creative)
+    void loadAnalytics(creative.id)
   }
 
   function startCreate() {
@@ -151,6 +161,7 @@
     launchMessage = ''
     errorMessage = ''
     createForm = emptyCreativeForm()
+    clearAnalytics()
   }
 
   async function createCreative() {
@@ -216,9 +227,44 @@
     selectedId = null
     showCreateForm = false
     showPreview = false
+    clearAnalytics()
     errorMessage = ''
     launchMessage = ''
     localStorage.removeItem(tokenStorageKey)
+  }
+
+  async function loadAnalytics(creativeId) {
+    analyticsLoading = true
+    analyticsError = ''
+    pendingAnalyticsId = creativeId
+
+    try {
+      const result = await api(`/api/creatives/${creativeId}/analytics?days=30`)
+
+      if (pendingAnalyticsId !== creativeId) {
+        return
+      }
+
+      analytics = result
+    } catch (error) {
+      if (pendingAnalyticsId !== creativeId) {
+        return
+      }
+
+      analytics = null
+      analyticsError = error.message
+    } finally {
+      if (pendingAnalyticsId === creativeId) {
+        analyticsLoading = false
+      }
+    }
+  }
+
+  function clearAnalytics() {
+    analytics = null
+    analyticsLoading = false
+    analyticsError = ''
+    pendingAnalyticsId = null
   }
 
   function openPreview(title, htmlContent) {
@@ -398,6 +444,9 @@
               {selectedCreative}
               {createForm}
               {editForm}
+              {analytics}
+              analyticsLoading={analyticsLoading}
+              analyticsError={analyticsError}
               {statusOptions}
               {saving}
               onPreview={openPreview}
