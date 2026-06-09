@@ -69,4 +69,6 @@ static void SeedDatabase(WebApplication app)
         });
 
     dbContext.SaveChanges();
+
+    TrackingEventLoader.Seed(dbContext);
 }

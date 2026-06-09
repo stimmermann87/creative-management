@@ -7,5 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Creative> Creatives => Set<Creative>();
 
+    public DbSet<TrackingEvent> TrackingEvents => Set<TrackingEvent>();
+
     public DbSet<User> Users => Set<User>();
 }

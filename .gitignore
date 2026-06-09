@@ -1,4 +1,9 @@
+interviews
 INTERVIEW.md
+
+# Interviewer-only tracking data generator (answer key - never shipped to candidates).
+# The generated CreativesIntegration.Api/tracking-events.json IS committed; this tool is not.
+tools/
 
 # .NET build outputs
 **/bin/

@@ -52,6 +52,21 @@ public class CreativesController(ICreativeService creativeService, IUserService 
             : Ok(analytics);
     }
 
+    [HttpGet("{id:guid}/events")]
+    public async Task<IActionResult> GetEvents(Guid id, [FromQuery] DateOnly? date, [FromQuery] string? eventType)
+    {
+        var authorizationResult = await AuthorizeRequestAsync();
+        if (authorizationResult is not null)
+        {
+            return authorizationResult;
+        }
+
+        var events = await creativeService.GetEventsAsync(id, date, eventType);
+        return events is null
+            ? NotFound(new { message = "Creative not found." })
+            : Ok(events);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateCreativeRequest request)
     {

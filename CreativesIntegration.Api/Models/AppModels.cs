@@ -13,6 +13,35 @@ public class Creative
     public DateTime CreatedAtUtc { get; set; }
 }
 
+public class TrackingEvent
+{
+    public Guid Id { get; set; }
+
+    public Guid CreativeId { get; set; }
+
+    // "impression" or "click".
+    public string EventType { get; set; } = string.Empty;
+
+    // When the browser says the event happened.
+    public DateTime ClientTimestampUtc { get; set; }
+
+    // When the API actually received the event.
+    public DateTime ServerReceivedAtUtc { get; set; }
+
+    // When the creative entered / left the viewport (impressions only; null for clicks).
+    public DateTime? InViewUtc { get; set; }
+
+    public DateTime? OutOfViewUtc { get; set; }
+
+    public string SessionId { get; set; } = string.Empty;
+
+    public string UserAgent { get; set; } = string.Empty;
+
+    public int DwellMs { get; set; }
+
+    public decimal Price { get; set; }
+}
+
 public class User
 {
     public int Id { get; set; }

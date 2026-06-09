@@ -15,6 +15,8 @@ public interface ICreativeService
 
     Task<CreativeAnalyticsResponse?> GetAnalyticsAsync(Guid id, int days);
 
+    Task<IReadOnlyList<TrackingEvent>?> GetEventsAsync(Guid id, DateOnly? date, string? eventType);
+
     Task<CreativeCommandResult> CreateAsync(CreateCreativeRequest request);
 
     Task<CreativeCommandResult> UpdateAsync(Guid id, UpdateCreativeRequest request);
@@ -43,7 +45,40 @@ public class CreativeService(
             return null;
         }
 
-        return BuildAnalyticsResponse(id, days);
+        var events = await dbContext.TrackingEvents
+            .Where(trackingEvent => trackingEvent.CreativeId == id)
+            .ToListAsync();
+
+        return BuildAnalyticsResponse(id, days, events);
+    }
+
+    public async Task<IReadOnlyList<TrackingEvent>?> GetEventsAsync(Guid id, DateOnly? date, string? eventType)
+    {
+        var creativeExists = await dbContext.Creatives.AnyAsync(creative => creative.Id == id);
+        if (!creativeExists)
+        {
+            return null;
+        }
+
+        IEnumerable<TrackingEvent> events = await dbContext.TrackingEvents
+            .Where(trackingEvent => trackingEvent.CreativeId == id)
+            .ToListAsync();
+
+        if (date is not null)
+        {
+            events = events.Where(trackingEvent =>
+                DateOnly.FromDateTime(trackingEvent.ServerReceivedAtUtc) == date);
+        }
+
+        if (!string.IsNullOrWhiteSpace(eventType))
+        {
+            events = events.Where(trackingEvent =>
+                string.Equals(trackingEvent.EventType, eventType, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return events
+            .OrderBy(trackingEvent => trackingEvent.ServerReceivedAtUtc)
+            .ToList();
     }
 
     public async Task<CreativeCommandResult> CreateAsync(CreateCreativeRequest request)
@@ -116,8 +151,8 @@ public class CreativeService(
             $"Submitted to fake Microsoft Curate. Deal {dealResponse.DealId}, insertion order {insertionOrderResponse.InsertionOrderId}.");
     }
 
-    // The API returns the raw seeded points as canonical data so chart-specific handling stays in the UI.
-    private static CreativeAnalyticsResponse BuildAnalyticsResponse(Guid creativeId, int days)
+    // Rolls raw tracking events into one point per day for the chart.
+    private static CreativeAnalyticsResponse BuildAnalyticsResponse(Guid creativeId, int days, List<TrackingEvent> events)
     {
         const int availableDays = 30;
 
@@ -125,7 +160,30 @@ public class CreativeService(
             ? availableDays
             : Math.Min(days, availableDays);
 
-        var allPoints = BuildThirtyDayAnalytics(DateOnly.FromDateTime(DateTime.UtcNow));
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var firstDay = today.AddDays(-(availableDays - 1));
+
+        var dailyTotals = events
+            .Where(trackingEvent => trackingEvent.EventType == "impression")
+            .GroupBy(trackingEvent => DateOnly.FromDateTime(trackingEvent.ServerReceivedAtUtc))
+            .ToDictionary(
+                group => group.Key,
+                group => new DailyTotal(
+                    // Count each session once so repeat views from the same session are not over-counted.
+                    group.Select(trackingEvent => trackingEvent.SessionId).Distinct().Count(),
+                    // Total billed amount for the day.
+                    group.Sum(trackingEvent => trackingEvent.Price)));
+
+        var allPoints = new List<CreativeAnalyticsPoint>(availableDays);
+        for (var index = 0; index < availableDays; index++)
+        {
+            var date = firstDay.AddDays(index);
+
+            allPoints.Add(dailyTotals.TryGetValue(date, out var total)
+                ? new CreativeAnalyticsPoint(date, total.Impressions, decimal.Round(total.Price, 2))
+                : new CreativeAnalyticsPoint(date, 0, 0m));
+        }
+
         var selectedPoints = allPoints
             .Skip(allPoints.Count - normalizedDays)
             .ToList();
@@ -137,43 +195,7 @@ public class CreativeService(
             selectedPoints);
     }
 
-    private static List<CreativeAnalyticsPoint> BuildThirtyDayAnalytics(DateOnly toDate)
-    {
-        var points = new List<CreativeAnalyticsPoint>(capacity: 30);
-        var fromDate = toDate.AddDays(-29);
-
-        for (var index = 0; index < 30; index++)
-        {
-            var dayNumber = index + 1;
-            var date = fromDate.AddDays(index);
-
-            if (dayNumber == 1)
-            {
-                points.Add(new CreativeAnalyticsPoint(date, 184, 26.45m));
-                continue;
-            }
-
-            if (dayNumber == 2)
-            {
-                points.Add(new CreativeAnalyticsPoint(date, 4, 1280.00m));
-                continue;
-            }
-
-            if (dayNumber <= 9)
-            {
-                points.Add(new CreativeAnalyticsPoint(date, 0, 0m));
-                continue;
-            }
-
-            var balancedDay = dayNumber - 9;
-            var impressions = 175 + ((balancedDay * 37) % 120) + ((balancedDay % 3) * 18);
-            var price = decimal.Round((impressions * 0.12m) + ((balancedDay % 4) * 1.65m), 2);
-
-            points.Add(new CreativeAnalyticsPoint(date, impressions, price));
-        }
-
-        return points;
-    }
+    private readonly record struct DailyTotal(int Impressions, decimal Price);
 
     private static Dictionary<string, string[]> Validate(string name, string htmlContent, string status)
     {
